@@ -55,7 +55,7 @@ sudo apt-get upgrade
 
 Install any "os" level upgrades:
 ```
-sudo apt-get diet-upgrade
+sudo apt-get dist-upgrade
 ```
 
 
