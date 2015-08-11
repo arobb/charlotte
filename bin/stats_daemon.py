@@ -14,11 +14,22 @@ class StatsDaemon(Daemon):
         latency_statsfile = dir + "/put_local_net_latency.sh"
         
         while True:
-            throughput_output = subprocess.check_output([throughput_statsfile])
-            #print throughput_output
+            try:
+                throughput_output = subprocess.check_output([throughput_statsfile])
+                #print throughput_output
+
+            except:
+                # Well something went wrong...
+                pass
             
-            latency_output = subprocess.check_output([latency_statsfile, "eth0"])
-            #print latency_output
+            
+            try:
+                latency_output = subprocess.check_output([latency_statsfile, "eth0"])
+                #print latency_output
+                
+            except:
+                # Well something went wrong...
+                pass
 
             # Wait a few seconds to run again
             # There are better ways to do this to get ~15 second intervals
