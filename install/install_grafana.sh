@@ -44,7 +44,7 @@ grunt
 # Package
 printf "\nPackaging Grafana\n"
 #go run build.go build package
-#go run build.go package
+go run build.go package
 
 # Install the package
 printf "\nInstalling Grafana package\n"
