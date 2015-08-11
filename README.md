@@ -33,13 +33,51 @@ and stopped with:
 The other services should be started automatically by the installers, and are configured to start at boot.
 
 
+## Extras ##
+I also installed Chromium following these directions: http://elinux.org/RPi_Chromium
+
+And configured it to start on boot with the small dashboard I built, following these instructions: https://www.danpurdy.co.uk/web-development/raspberry-pi-kiosk-screen-tutorial/
+
+
 # Install #
+## Precheck ##
+If you're doing this on a new Pi, don't forget to grab recent updates/upgrades for your system. Even recent images can be out of date by the time you get them installed. These three commands all require an Internet connection.
+
+Update the list of available packages:
+```
+sudo apt-get update
+```
+
+Install any available up*grades*:
+```
+sudo apt-get upgrade
+```
+
+Install any "os" level upgrades:
+```
+sudo apt-get diet-upgrade
+```
+
+
 ## PiTFT 3.5" ##
-This will perform the basic prep tasks and start the PiTFT Easy Install script.
+This will perform the basic prep tasks and start the PiTFT Easy Install script. This does the top part of https://learn.adafruit.com/adafruit-pitft-3-dot-5-touch-screen-for-raspberry-pi/easy-install .
+
+*You will need to press enter a few times during this script!*
+You will need to respond **YES** to these prompts.
 
 Run:
 ```
-./install/install_pitft_35.sh
+sudo ./install/install_pitft_35.sh
+```
+
+Run the PiTFT configuration script:
+```
+sudo adafruit-pitft-helper -t 35r
+```
+
+Reboot:
+```
+sudo shutdown -r now
 ```
 
 
