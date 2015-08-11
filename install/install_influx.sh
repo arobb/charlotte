@@ -2,7 +2,7 @@
 # Script to install InfluxDB (after dependencies have been satisfied)
 
 # Version to install
-version="0.9.1"
+version="0.9.2.1"
 goversion="1.4"
 
 # Install InfluxDB
