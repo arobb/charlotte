@@ -25,6 +25,36 @@ git clone https://github.com/grafana/grafana.git
 cd $GOPATH/src/github.com/grafana/grafana
 git checkout tags/v"$version"
 
+# Get ARM/RPi version of PhantomJS
+arch=$(uname -m)
+
+if [[ $arch == arm* ]];
+then
+
+	cd $GOPATH/src/github.com/grafana/grafana/vendor/phantomjs
+
+	if [ ! -f phantomjs.amd64 ];
+	then
+		mv phantomjs phantomjs.amd64
+	fi
+
+	if [ ! -f phantomjs.arm ];
+	then
+		echo "Downloading PhantomJS for Raspberry Pi"
+		curl --silent -L -O https://github.com/aeberhardo/phantomjs-linux-armv6l/raw/master/phantomjs-1.9.0-linux-armv6l.tar.bz2
+		bunzip2 phantomjs-*.bz2 && tar xf phantomjs-*.tar
+		rm phantomjs-*.tar
+
+		cp phantomjs*/bin/phantomjs ./
+		mv ./phantomjs ./phantomjs.arm
+
+		ln -s phantomjs.arm phantomjs
+	fi
+
+	cd $GOPATH/src/github.com/grafana/grafana
+fi
+
+
 # Build the backend
 # Godep setup
 go run build.go setup
