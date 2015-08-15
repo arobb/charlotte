@@ -33,6 +33,9 @@ esac
 epoch=$(date +%s)
 submission=""
 
+SAFEIFS=$IFS
+IFS=$'\n'
+
 # Get ping results
 results=$($DIR/get_roundtrip_latency.sh "$target")
 
