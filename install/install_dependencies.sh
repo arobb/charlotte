@@ -7,6 +7,7 @@ printf "\nThis script will first install the following:\n"
 printf "\tGPG\n"
 printf "\topenssl\n"
 printf "\tlibssl-dev\n"
+printf "\tbc\n" # For monitor scripts
 printf "\tBonjour\n"
 printf "\tarp-scan\n"
 printf "\tSNMP tools\n"
@@ -33,7 +34,7 @@ printf "\tnode.js\n"
 printf "\n\n"
 printf "Getting started...\n"
 
-sudo apt-get --quiet -y install gnupg openssl libssl-dev libnss-mdns arp-scan snmp curl git mercurial make checkinstall binutils ruby ruby-dev bison gcc build-essential alien
+sudo apt-get --quiet -y install gnupg openssl libssl-dev bc libnss-mdns arp-scan snmp curl git mercurial make checkinstall binutils ruby ruby-dev bison gcc build-essential alien
 result=$?
 
 if [ "$result" -ne 0 ];
