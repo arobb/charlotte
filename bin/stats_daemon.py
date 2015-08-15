@@ -11,7 +11,7 @@ class StatsDaemon(Daemon):
         dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
         
         throughput_statsfile = "./" + dir + "/put_local_net_ext_traffic.sh"
-        latency_statsfile = "./" + dir + "/put_local_net_latency.sh"
+        latency_statsfile = dir + "/put_local_net_latency.sh"
         
         while True:
             try:
