@@ -10,7 +10,9 @@ class StatsDaemon(Daemon):
     def run(self):
         dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
         
-        google_rtlatency_statsfile = "./" + dir + "/put_google_dns_latency.sh"
+	os.chdir( "./" + dir )
+
+        google_rtlatency_statsfile = "./" + "put_google_dns_latency.sh"
         
         while True:
             try:
