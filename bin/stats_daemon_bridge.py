@@ -33,7 +33,7 @@ if __name__ == "__main__":
         exit("You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'. Exiting.")
     """
     
-    daemon = StatsDaemon('/tmp/statsdaemon_comcast.pid', stdin='/dev/null', stdout='/dev/stdout', stderr='/dev/stderr')
+    daemon = StatsDaemon('/tmp/statsdaemon_bridge.pid', stdin='/dev/null', stdout='/dev/stdout', stderr='/dev/stderr')
 
     if len(sys.argv) == 2:
         if 'start' == sys.argv[1]:
