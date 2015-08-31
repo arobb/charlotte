@@ -1,9 +1,15 @@
 # Charlotte #
 ## Home network monitoring on Raspberry Pi ##
 
-*This is the first round, I don't expect all this to work until I've removed this message.*
-
 These steps guide the installation of the InfluxDB time-series datastore, Grafana web UI, a slew of dependencies, and make available a small Python daemon that can poll the local network for information. These were built on a VM running Debian, and installed on a Pi 2. The 'estimated durations' below are approximately what I experienced when I ran these on a Pi 2; run times on the development VM (on a MacBook Pro host) were significantly faster.
+
+For those who care about such things, I want to call out that the following packages are installed during this process. See install/install_dependencies.sh for a full list:
+- Bonjour (mdns, though this is installed by default)
+- arp-scan
+- snmp
+- ruby
+- go
+- node.js
 
 # Basics #
 ## Hardware ##

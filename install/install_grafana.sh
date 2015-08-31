@@ -2,11 +2,11 @@
 # Installs Grafana
 
 # Version to install
-version="2.1.0"
+version="2.1.3"
 goversion="1.4"
 
 #Install Grafana
-echo "Installing Grafana"
+printf "\nInstalling Grafana\n"
 sudo npm install grunt --save-dev
 sudo npm install -g grunt-cli --save-dev
 
@@ -14,7 +14,7 @@ source ~/.gvm/scripts/gvm
 gvm use "go$goversion"
 
 # Show the current $GOPATH
-echo "Current GOPATH: $GOPATH"
+printf "\nCurrent GOPATH: $GOPATH\n"
 
 # GVM has changed up where GOPATH is, so need to use it
 mkdir -p $GOPATH/src/github.com/grafana
@@ -23,7 +23,16 @@ cd $GOPATH/src/github.com/grafana
 # Download the source
 git clone https://github.com/grafana/grafana.git
 cd $GOPATH/src/github.com/grafana/grafana
+git pull origin master
 git checkout tags/v"$version"
+result=$?
+
+if [ "$result" -ne "0" ];
+then
+	printf "\nGit operations failed, exiting install. Please resolve errors above and try again.\n"
+	exit 1
+fi
+
 
 # Get ARM/RPi version of PhantomJS
 arch=$(uname -m)
@@ -38,24 +47,48 @@ then
 		mv phantomjs phantomjs.amd64
 	fi
 
-	if [ ! -f phantomjs.arm ];
+	if [ ! -f /usr/local/bin/phantomjs ];
 	then
-		echo "Downloading PhantomJS for Raspberry Pi"
-		curl --silent -L -O https://github.com/aeberhardo/phantomjs-linux-armv6l/raw/master/phantomjs-1.9.0-linux-armv6l.tar.bz2
-		bunzip2 phantomjs-*.bz2 && tar xf phantomjs-*.tar
-		rm phantomjs-*.tar
+		printf "\nDownloading PhantomJS 1.9.8 for Raspberry Pi\n"
+		sudo curl --silent -L -o /usr/local/bin/phantomjs https://github.com/piksel/phantomjs-raspberrypi/raw/master/bin/phantomjs
 
-		cp phantomjs*/bin/phantomjs ./
-		mv ./phantomjs ./phantomjs.arm
+		sudo chmod +x /usr/local/bin/phantomjs
 
-		ln -s phantomjs.arm phantomjs
+		# Copy it to the vendor directory
+		cp /usr/local/bin/phantomjs ./
+		sudo chown pi:pi phantomjs
+
 	fi
+
+	# Patch requirejs.js to handle slow drives, per this comment thread
+	# https://github.com/grafana/grafana/issues/2183#issuecomment-131439150
+	cd $GOPATH/src/github.com/grafana/grafana/tasks/options
+	patch --forward --silent requirejs.js >/dev/null <<EOF
+*** requirejs.js.old	2015-08-22 02:52:18.553465630 +0000
+--- requirejs.js	2015-08-22 02:19:29.942872946 +0000
+***************
+*** 21,26 ****
+--- 21,28 ----
+        inlineText: true,
+        skipPragmas: true,
+  
++       waitSeconds: 0, // Raspberry Pi builds https://github.com/grafana/grafana/issues/2183#issuecomment-131439150
++ 
+        done: function (done, output) {
+          var duplicates = require('rjs-build-analysis').duplicates(output);
+  
+EOF
+
+	# In case patching fails (likely because it already happened)
+	# a file will be created that needs to be deleted
+	rm requirejs.js.rej 2>/dev/null
 
 	cd $GOPATH/src/github.com/grafana/grafana
 fi
 
 
 # Build the backend
+printf "\nBuilding Grafana backend\n"
 # Godep setup
 go run build.go setup
 
@@ -64,25 +97,66 @@ $GOPATH/bin/godep restore
 
 # Build
 go build .
+go run build.go build
+result=$?
+
+if [ "$result" -ne "0" ];
+then
+	printf "\nGrafana backend build failed. Exiting."
+	exit 1
+fi
+
 
 # Build the front end
+printf "\nBuilding Grafana frontend\n"
 sudo npm install
 sudo npm install -g grunt-cli
 grunt
+result=$?
+
+if [ "$result" -ne "0" ];
+then
+        printf "\nGrafana frontend build failed. Exiting."
+        exit 1
+fi
 
 
 # Package
 printf "\nPackaging Grafana\n"
 #go run build.go build package
 go run build.go package
+result=$?
+
+if [ "$result" -ne "0" ];
+then
+        printf "\nGrafana packaging failed. Exiting."
+        exit 1
+fi
+
 
 # Install the package
 printf "\nInstalling Grafana package\n"
 sudo dpkg -i dist/grafana_*.deb
+result=$?
+
+if [ "$result" -ne "0" ];
+then
+        printf "\nGrafana package install failed. Exiting."
+        exit 1
+fi
+
 
 # Start the service
 printf "\nStarting Grafana server\n"
 sudo service grafana-server start
+result=$?
+
+if [ "$result" -ne "0" ];
+then
+        printf "\nGrafana service failed to start. Exiting install script."
+        exit 1
+fi
+
 
 # Check the service started
 sudo service grafana-server status >/dev/null
@@ -90,10 +164,10 @@ status=$?
 
 if [ "$status" -ne 0 ];
 then
-    echo "Something went wrong starting Grafana. Exiting."
+    printf "\nSomething went wrong starting Grafana. Exiting.\n"
     exit 1
 else
-    echo "Configuring the service to start at boot"
+    printf "\nConfiguring the service to start at boot\n"
     sudo systemctl enable grafana-server.service
 fi
 
