@@ -137,9 +137,9 @@ Run:
 
 
 ## DONE! ##
-You should be ready to go. Start the stats collection daemon:
+You should be ready to go. Start the stats collection daemon: (From the project root)
 ```
-./bin/stats_daemon.py start
+$PWD/bin/stats_daemon.py start
 ```
 
 **PLEASE NOTE**: The daemon is not yet configured to start on boot, so you'll need to re-run this command whenever you restart the Pi! (One extremely dirty option would be to run the command with cron, piping output to /dev/null; the daemon uses a PID file to maintain a single instance, so this should not create multiple instances, however you will lose any error messages that would otherwise be written to the terminal.)
