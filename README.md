@@ -25,7 +25,7 @@ For those who care about such things, I want to call out that the following pack
 	REST API http://localhost:8086
 
 ## Grafana ##
-	Version 2.1.0
+	Version 2.1.3
 	UI http://*:3000
 
 ## Running things ##
