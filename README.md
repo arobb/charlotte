@@ -109,8 +109,7 @@ Run:
 
 
 ## InfluxDB ##
-*You will need to press enter a few times during this script!*  
-But you don't need to enter any info. Hopefully.
+Install a time-series database.
 
 ### Service installation ###
 Estimated duration: 7 minutes  
@@ -131,6 +130,9 @@ Run:
 
 
 ## Grafana ##
+Install a graphical web-UI for rendering time-series data.
+
+### Service installation ###
 Estimated duration: 35 minutes  
 Run:
 ```

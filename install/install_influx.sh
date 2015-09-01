@@ -24,7 +24,6 @@ cd $GOPATH/src/github.com/influxdb
 # Download the source
 git clone https://github.com/influxdb/influxdb.git
 cd $GOPATH/src/github.com/influxdb/influxdb
-git checkout tags/v"$version"
 
 # Dependencies
 cd $GOPATH/src/github.com/influxdb
@@ -51,19 +50,21 @@ then
     rm influxdb-*.rpm
 fi
 
-./package.sh "$version.pre"
-result=$?
-
-if [ "$result" -ne 0 ];
-then
-    echo "Package build for InfluxDB failed, installation incomplete."
-    exit 1
-fi
+git checkout tags/v"$version"
+NIGHTLY_BUILD="v$version" ./package.sh "$version"
+# Intentionally ignore errors here, we expect one regarding an S3 key
 
 
 # Install the packaged version
 printf "\nInstalling InfluxDB...\n"
 sudo dpkg --install influxdb_*.deb
+result=$?
+
+if [ "$result" -ne 0 ];
+then
+    echo "Package build and setup for InfluxDB failed, installation incomplete."
+    exit 1
+fi
 
 
 # Start the service
