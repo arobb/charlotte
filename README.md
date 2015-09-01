@@ -146,7 +146,7 @@ $PWD/bin/stats_daemon.py start
 
 
 **User Impersonation /dev/stdout error**
-If you attempt to start the script while ipmersonating another user (`sudo su`) You may get the following error: `IOError: [Errno 13] Permission denied: '/dev/stdout'`. The simple resolution is to log in as the user directly; more information is at the StackExchange thread below.
+If you attempt to start the script while impersonating another user (`sudo su`) You may get the following error: `IOError: [Errno 13] Permission denied: '/dev/stdout'`. The simple resolution is to log in as the user directly; more information is at the StackExchange thread below.
 Solved with: http://unix.stackexchange.com/questions/38538/bash-dev-stderr-permission-denied
 
 
