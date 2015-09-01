@@ -45,7 +45,7 @@ The other services should be started automatically by the installers, and are co
 ## Extras ##
 I also installed Chromium following these directions: http://elinux.org/RPi_Chromium
 
-And configured it to start on boot with a small Grafana dashboard I built, following these instructions: https://www.danpurdy.co.uk/web-development/raspberry-pi-kiosk-screen-tutorial/
+And configured it to start on boot with a small Grafana dashboard I built, following these instructions:   https://www.danpurdy.co.uk/web-development/raspberry-pi-kiosk-screen-tutorial/
 
 Hopefully I'll have a chance in the future to automate the process to include these components as well.
 
@@ -62,7 +62,7 @@ Update the list of available packages:
 sudo apt-get update
 ```
 
-Install any available up*grades*:
+Install any available upgrades:
 ```
 sudo apt-get upgrade
 ```
@@ -79,7 +79,7 @@ This will perform the basic prep tasks, but you'll then need to run the PiTFT He
 *You will need to press enter a few times during this script!*
 You will need to respond **YES** to these prompts.
 
-Estimated duration: 5 minutes
+Estimated duration: 5 minutes  
 Run:
 ```
 sudo ./install/install_pitft_35.sh
@@ -99,7 +99,7 @@ sudo reboot
 ## Service Dependencies ##
 This will install a fairly large set of dependencies.
 
-Estimated duration: 2 hours 30 minutes
+Estimated duration: 2 hours 30 minutes  
 Run:
 ```
 ./install/install_dependencies.sh
@@ -107,11 +107,11 @@ Run:
 
 
 ## InfluxDB ##
-*You will need to press enter a few times during this script!* 
+*You will need to press enter a few times during this script!*  
 But you don't need to enter any info. Hopefully.
 
 ### Service installation ###
-Estimated duration: 7 minutes
+Estimated duration: 7 minutes  
 Run:
 ```
 ./install/install_influx.sh
@@ -121,7 +121,7 @@ Run:
 ### Service configuration ###
 Create the basic network database and retention policy
 
-Estimated duration: 1 second
+Estimated duration: 1 second  
 Run:
 ```
 ./install/configure_influx.sh
@@ -129,7 +129,7 @@ Run:
 
 
 ## Grafana ##
-Estimated duration: 35 minutes
+Estimated duration: 35 minutes  
 Run:
 ```
 ./install/install_grafana.sh
@@ -142,17 +142,18 @@ You should be ready to go. Start the stats collection daemon: (From the project 
 $PWD/bin/stats_daemon.py start
 ```
 
-**PLEASE NOTE**: The daemon is not yet configured to start on boot, so you'll need to re-run this command whenever you restart the Pi! (One extremely dirty option would be to run the command with cron, piping output to /dev/null; the daemon uses a PID file to maintain a single instance, so this should not create multiple instances, however you will lose any error messages that would otherwise be written to the terminal.)
+**PLEASE NOTE**  
+The daemon is not yet configured to start on boot, so you'll need to re-run this command whenever you restart the Pi! (One extremely dirty option would be to run the command with cron, piping output to /dev/null; the daemon uses a PID file to maintain a single instance, so this should not create multiple instances, however you will lose any error messages that would otherwise be written to the terminal.)
 
 
-**User Impersonation /dev/stdout error**
+**User Impersonation /dev/stdout error**  
 If you attempt to start the script while impersonating another user (`sudo su`) You may get the following error: `IOError: [Errno 13] Permission denied: '/dev/stdout'`. The simple resolution is to log in as the user directly; more information is at the StackExchange thread below.
 Solved with: http://unix.stackexchange.com/questions/38538/bash-dev-stderr-permission-denied
 
 
-Stats are collected thusly:
-**Database**: network
-**Measurements**
+Stats are collected thusly:  
+**Database**: network  
+**Measurements**  
 - internet
   - field: if (hard coded to 'wan1')
   - field: provider (hard coded to 'comcast')
@@ -165,5 +166,5 @@ Stats are collected thusly:
   - field: target_ip
   - tag: value (ping time in whole milliseconds)
 
-And open a browser to Grafana. You'll need to configure your InfluxDB as a data source and build a dashboard. (I haven't automated that part yet.)
+And open a browser to Grafana. You'll need to configure your InfluxDB as a data source and build a dashboard. (I haven't automated that part yet.)  
 http://raspberrypi.local:3000
