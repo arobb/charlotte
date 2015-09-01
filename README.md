@@ -31,15 +31,15 @@ For those who care about such things, I want to call out that the following pack
 ## Running things ##
 The stats collection daemon can be started with:
 ```
-./bin/stats_daemon.py start
+$PWD/bin/stats_daemon.py start
 ```
 
 and stopped with:
 ```
-./bin/stats_daemon.py stop
+$PWD/bin/stats_daemon.py stop
 ```
 
-The other services should be started automatically by the installers, and are configured to start at boot.
+The other services should be started automatically by the installers, and are configured to start at boot. For a reason that now escapes me, using '.' rather than $PWD does *not* work to start the daemon scripts. (They'll appear to start, but won't function.)
 
 
 ## Extras ##
