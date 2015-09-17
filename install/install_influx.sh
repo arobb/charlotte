@@ -64,6 +64,18 @@ if [ "$result" -ne 0 ];
 then
     echo "Package build and setup for InfluxDB failed, installation incomplete."
     exit 1
+else
+    printf "Adding log rotation..."
+
+    # Check that logrotate exists
+    if [ -d /etc/logrotate.d ];
+    then
+       printf "/var/log/influxdb {\n  compress\n  rotate 5\n  size 1M\n  missingok\n  copytruncate\n}\n" | sudo tee /etc/logrotate.d/influxdb >/dev/null
+       printf "\nDone\n"
+    else
+       printf "\nFailed"
+       printf "\nPlease make sure to rotate /var/log/influxdb appropriately\n"
+    fi
 fi
 
 
