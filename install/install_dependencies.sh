@@ -17,6 +17,7 @@ printf "\tmercurial\n"
 printf "\tmake\n"
 printf "\tcheckinstall\n"
 printf "\tbinutils\n"
+printf "\tmonit\n"
 printf "\truby\n" # For FPM, in turn for Influx package.sh
 printf "\truby-dev\n" # For FPM, in turn for Influx package.sh
 printf "\tbison\n"
@@ -34,7 +35,7 @@ printf "\tnode.js\n"
 printf "\n\n"
 printf "Getting started...\n"
 
-sudo apt-get --quiet -y install gnupg openssl libssl-dev bc libnss-mdns arp-scan snmp curl git mercurial make checkinstall binutils ruby ruby-dev bison gcc build-essential alien
+sudo apt-get --quiet -y install gnupg openssl libssl-dev bc libnss-mdns arp-scan snmp curl git mercurial make checkinstall binutils monit ruby ruby-dev bison gcc build-essential alien
 result=$?
 
 if [ "$result" -ne 0 ];

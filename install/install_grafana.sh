@@ -169,6 +169,19 @@ then
 else
     printf "\nConfiguring the service to start at boot\n"
     sudo systemctl enable grafana-server.service
+
+    printf "\nConfiguring process monitor to automatically restart the service\n"
+    sudo tee /etc/monit/conf.d/grafana-server >/dev/null <<- EOF
+	check process grafana-server with pidfile /var/run/grafana-server.pid
+	group grafana
+	start program = "/etc/init.d/grafana-server start"
+	stop program = "/etc/init.d/grafana-server stop"
+	if failed host 127.0.0.1 port 3000
+	protocol http then restart
+	if 5 restarts within 5 cycles then timeout
+	EOF
+
+    sudo service monit restart >/dev/null
 fi
 
 printf "\nInstalled and started Grafana successfully.\n"

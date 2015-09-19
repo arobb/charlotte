@@ -94,6 +94,19 @@ then
 else
     echo "Configuring the service to start at boot"
     sudo systemctl enable influxdb.service
+
+    printf "\nConfiguring process monitor to automatically restart the service\n"
+    sudo tee /etc/monit/conf.d/influxdb >/dev/null <<- EOF
+	check process influxd with pidfile /var/run/influxdb/influxd.pid
+	group influxdb
+	start program = "/etc/init.d/influxdb start"
+	stop program = "/etc/init.d/influxdb stop"
+	if failed host 127.0.0.1 port 8083
+	protocol http then restart
+	if 5 restarts within 5 cycles then timeout
+	EOF
+
+    sudo service monit restart >/dev/null
 fi
 
 
