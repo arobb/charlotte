@@ -13,15 +13,21 @@ oidstatus=".1.3.6.1.2.1.2.2.1.8"
 oidin=".1.3.6.1.2.1.31.1.1.1.6"
 oidout=".1.3.6.1.2.1.31.1.1.1.10"
 
+if [ -z "$1" ];
+then
+    echo "Please provide a space-separated MAC address as the first and only parameter"
+    exit 1
+fi
+
 # MAC of the gateway interface
-mac="B4 75 0E 06 DB 76"
+mac="$1"
 
 # Get the local gateway
 gateway=$(netstat -rn | grep 'UG' | awk '{print $2}' | grep '^[0-9]\{1,3\}\.')
 
 # Get the gateway interface SNMP MIB index
 # -On: print numeric values
-ifrawoid=$(snmpwalk -v 2c -On -c public $gateway | grep '.1.3.6.1.2.1.55.1.5.1.8')
+ifrawoid=$(snmpwalk -v 2c -On -c public $gateway | grep '.1.3.6.1.2.1.2.2.1.6')
 result=$?
 
 if [ "$result" -ne 0 ];

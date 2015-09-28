@@ -4,28 +4,86 @@ influxhostport="localhost:8086"
 influxdatabase="network"
 influxtable="internet"
 router="router01"
-interface="wan1"
-provider="comcast"
 
 DIR=$(readlink -f $(dirname ${BASH_SOURCE[0]}))
 
+
+# Get arguments
+show_help()
+{
+    echo "Please provide three string arguments: 'i' the interface, 'm' the interface MAC address, and 'p' the provider."
+}
+
+OPTIND=1 # Reset counter for getopts
+interface=""
+mac=""
+provider=""
+
+while getopts "hi:m:p:" opt; do
+    case $opt in
+        i)
+            interface="$OPTARG"
+            ;;
+        m)
+            mac="$OPTARG"
+            ;;
+        p)
+            provider="$OPTARG"
+            ;;
+        h|\?)
+            show_help
+            exit 0
+            ;;
+        :)
+            echo "'$OPTARG' requires a string argument" 
+    esac
+done
+
+
+exitnow=0
+if [ -z "$interface" ];
+then
+    echo "'i' not set"
+    exitnow=1
+fi
+
+if [ -z "$mac" ];
+then
+    echo "'m' not set"
+    exitnow=1
+fi
+
+if [ -z "$provider" ];
+then
+    echo "'p' not set"
+    exitnow=1
+fi
+
+if [ "$exitnow" -eq "1" ];
+then
+    show_help
+    exit 1
+fi
+
+
+# Determine which platform we're on since the responses vary
 platform='unknown'
 unamestr=$(uname)
 
 case $unamestr in
     Darwin)
         platform='mac'
-        myip=$(ifconfig $1 | grep "inet " | grep -v 127.0.0.1 | cut -d\  -f2)
+        myip=$(ifconfig | grep "inet " | grep -v 127.0.0.1 | cut -d\  -f2)
         ;;
 
     Linux)
         platform='linux'
-        myip=$(ip -4 addr show $1 | grep 'inet ' | sed -e 's/^[ \t]*//' | cut -d' ' -f2 | cut -d'/' -f1)
+        myip=$(ip -4 addr show | grep 'inet ' | sed -e 's/^[ \t]*//' | cut -d' ' -f2 | cut -d'/' -f1)
         ;;
 
     *)
         platform='linux'
-        myip=$(ip -4 addr show $1 | grep 'inet ' | sed -e 's/^[ \t]*//' | cut -d' ' -f2 | cut -d'/' -f1)
+        myip=$(ip -4 addr show | grep 'inet ' | sed -e 's/^[ \t]*//' | cut -d' ' -f2 | cut -d'/' -f1)
         ;;
 esac
 
@@ -38,7 +96,7 @@ SAFEIFS=$IFS
 IFS=$'\n'
 
 # Get ping results
-results=($($DIR/get_local_net_ext_traffic.sh))
+results=($($DIR/get_local_net_ext_traffic.sh "$mac"))
 result=$?
 
 if [ "$result" -ne 0 ];

@@ -3,7 +3,7 @@
 
 These steps guide the installation of the InfluxDB time-series datastore, Grafana web UI, a slew of dependencies, and make available a small Python daemon that can poll the local network for information. These were built on a VM running Debian, and installed on a Pi 2. The 'estimated durations' below are approximately what I experienced when I ran these on a Pi 2; run times on the development VM (on a MacBook Pro host) were significantly faster.
 
-The metrics collected include external traffic flow from the gateway using SNMP. While most of the metrics are auto-discovering, you'll need to change the MAC address of the external interface in bin/get_local_net_ext_traffic.sh. For the collection to work, your router also must support SNMP, and must have it enabled. (It also needs to publish the same information the script expects at the same SNMP OIDs.)
+The metrics collected include external traffic flow from the gateway using SNMP. While most of the metrics are auto-discovering, you'll need to change the MAC address of the external interface in bin/stats_daemon.py. For the collection to work, your router also must support SNMP, and must have it enabled. (It also needs to publish the same information the get_local_net_ext_traffic.sh script expects at the same SNMP OIDs.)
 
 For those who care about such things, I want to call out that the following packages are installed during this process. See install/install_dependencies.sh for a full list:
 - Bonjour (mdns, though this is installed by default)
@@ -23,8 +23,8 @@ For those who care about such things, I want to call out that the following pack
 
 ## Influx DB ##
 	Version 0.9.2.1
-	UI http://localhost:8083
-	REST API http://localhost:8086
+	UI http://*:8083
+	REST API http://*:8086
 
 ## Grafana ##
 	Version 2.1.3
@@ -159,8 +159,8 @@ Stats are collected thusly:
 **Database**: network  
 **Measurements**  
 - internet
-  - field: if (hard coded to 'wan1')
-  - field: provider (hard coded to 'comcast')
+  - field: if (hard coded in bin/stats_daemon.py)
+  - field: provider (hard coded in bin/stats_daemon.py)
   - field: router (hard coded to 'router01')
   - tag: state
   - tag: received_in_bytes
@@ -169,6 +169,8 @@ Stats are collected thusly:
   - field: source_ip (Raspberry Pi's IP address)
   - field: target_ip
   - tag: value (ping time in whole milliseconds)
+
+There are also three stand-alone daemons that poll much more quickly than the regular daemon. These are for the WAN 1 bridge (modem), Comcast's gateway for the 73.170.0.0/16 subnet, and Google's public DNS.
 
 And open a browser to Grafana. You'll need to configure your InfluxDB as a data source and build a dashboard. (I haven't automated that part yet.)  
 http://raspberrypi.local:3000

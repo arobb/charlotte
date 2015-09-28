@@ -15,7 +15,16 @@ class StatsDaemon(Daemon):
         
         while True:
             try:
-                throughput_output = subprocess.check_output([throughput_statsfile])
+                throughput_output = subprocess.check_output([throughput_statsfile, "-i", "wan1", "-m", "B4 75 0E 06 DB 76", "-p", "comcast"])
+                #print throughput_output
+
+            except:
+                # Well something went wrong...
+                pass
+
+
+            try:
+                throughput_output = subprocess.check_output([throughput_statsfile, "-i", "wan2", "-m", "B4 75 0E 06 DB 77", "-p", "att"])
                 #print throughput_output
 
             except:
