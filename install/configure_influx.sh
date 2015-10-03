@@ -6,5 +6,5 @@ curl -G 'http://localhost:8086/query' --data-urlencode "q=CREATE DATABASE networ
 echo ""
 
 # Apply reasonable (6 month) retention period
-curl -G 'http://localhost:8086/query' --data-urlencode "q=CREATE RETENTION POLICY sixmonths ON network DURATION 180d REPLICATION 1 DEFAULT"
+curl -G 'http://localhost:8086/query' --data-urlencode "q=CREATE RETENTION POLICY twomonths ON network DURATION 60d REPLICATION 1 DEFAULT"
 echo ""
