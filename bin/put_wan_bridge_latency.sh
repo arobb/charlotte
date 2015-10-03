@@ -19,12 +19,12 @@ case $unamestr in
 
     Linux)
         platform='linux'
-        myip=$(ip -4 addr show $1 | grep 'inet ' | sed -e 's/^[ \t]*//' | cut -d' ' -f2 | cut -d'/' -f1)
+        myip=$(ip -4 addr show $1 | grep 'inet ' | grep -v '127.0.0.1' | sed -e 's/^[ \t]*//' | cut -d' ' -f2 | cut -d'/' -f1)
         ;;
 
     *)
         platform='linux'
-        myip=$(ip -4 addr show $1 | grep 'inet ' | sed -e 's/^[ \t]*//' | cut -d' ' -f2 | cut -d'/' -f1)
+        myip=$(ip -4 addr show $1 | grep 'inet ' | grep -v '127.0.0.1' | sed -e 's/^[ \t]*//' | cut -d' ' -f2 | cut -d'/' -f1)
         ;;
 esac
 

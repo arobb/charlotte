@@ -9,7 +9,7 @@ fi
 # Use an arp-scan to detect all the local IP addresses
 # This would normally require root, but arp-scan can be make globally usable with
 #  sudo chmod u+s /usr/bin/arp-scan
-for i in $(arp-scan --interface=$1 --localnet | tail -n+3 | grep '^[0-9]\{1,3\}[.]' | cut -f1);
+for i in $(arp-scan --interface=$1 --localnet | tail -n+3 | grep '^[0-9]\{1,3\}[.]' | cut -f1 | sort | uniq);
 do
     # Ping a host, strip trailing newlines (thanks to StackOverflow user dogbane)
     #  then takes only the last line
