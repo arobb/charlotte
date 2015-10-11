@@ -6,6 +6,10 @@ then
     exit 1
 fi
 
+# For an unknown reason, routes occasionally get borked. Running a quick traceroute
+# seems to clear up the issue
+traceroute -w 1 -q 1 -n $1 1>/dev/null 2>/dev/null
+
 # Ping a host, strip trailing newlines (thanks to StackOverflow user dogbane)
 #  then takes only the last line
 # http://stackoverflow.com/questions/7359527/removing-trailing-starting-newlines-with-sed-awk-tr-and-friends

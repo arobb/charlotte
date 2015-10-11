@@ -37,7 +37,7 @@ SAFEIFS=$IFS
 IFS=$'\n'
 
 # Get ping results
-results=$($DIR/get_nc_roundtrip_latency.sh "$target" 80)
+results=$($DIR/get_roundtrip_latency.sh "$target" 80)
 
 addr=$(echo "$results" | cut -f1)
 latency=$(echo "$results" | cut -f2)
