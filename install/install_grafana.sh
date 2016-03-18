@@ -2,8 +2,8 @@
 # Installs Grafana
 
 # Version to install
-version="2.1.3"
-goversion="1.4"
+version="2.6.0"
+goversion="1.5"
 
 #Install Grafana
 printf "\nInstalling Grafana\n"
