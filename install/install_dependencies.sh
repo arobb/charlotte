@@ -31,7 +31,11 @@ printf "\n\n"
 printf "This script will then install:\n"
 printf "\tGo version manager\n"
 printf "\tgo\n"
-printf "\tnode.js\n"
+printf "\n\n"
+printf "This script will then:\n"
+printf "\tUninstall nodejs-legacy and nodered\n"
+printf "\tInstall the current version of node.js\n"
+printf "\tInstall the current version of node-red\n"
 printf "\n\n"
 printf "Getting started...\n"
 
@@ -68,8 +72,8 @@ echo "Running 'source /home/$(whoami)/.gvm/scripts/gvm'"
 source /home/$(whoami)/.gvm/scripts/gvm
 
 # Install Go
-gvm install go1.4
-gvm install go1.4.2
+gvm install go1.5
+gvm install go1.4.3
 result=$?
 
 if [ "$result" -ne 0 ];
@@ -78,8 +82,8 @@ then
     exit 1
 fi
 
-# Set go 1.4 as the default version
-gvm use go1.4.2 --default
+# Set go 1.5 as the default version
+gvm use go1.5 --default
 
 # Configure a work directory
 printf "\nConfiguring the Go work directory...\n"
@@ -104,7 +108,7 @@ fi
 export GOPATH=/home/$(whoami)/gocode
 
 # Install NodeJS
-printf "\nInstalling Node.js\n"
+printf "\nInstalling node.js\n"
 nodedir="/tmp/node_js_src"
 
 # Download location
@@ -117,26 +121,35 @@ fi
 cd $nodedir
 
 # Pull down the hashes for the current files
-curl --silent -o $nodedir/SHASUMS.txt.asc https://nodejs.org/dist/latest/SHASUMS.txt.asc
+printf "Downloading node binary"
+curl --silent -o $nodedir/SHASUMS256.txt.asc https://nodejs.org/dist/latest/SHASUMS256.txt.asc
+printf "\n"
+
+# Identify the filename for our architecture's binary
+nodebinary=$(grep "$(uname --machine).*gz" SHASUMS256.txt.asc | awk '{print $2}')
 
 # Pull down the node source code if we don't already have it
 if [ ! -f $nodedir/node-latest.tar.gz ];
 then
-    curl -o $nodedir/node-latest.tar.gz http://nodejs.org/dist/node-latest.tar.gz
+    printf "Downloading node binary"
+    curl -o $nodedir/node-latest.tar.gz http://nodejs.org/dist/latest/$nodebinary
+    printf "\n"
 fi
 
 # Verify the hash of the download we have
-publishedsha=$(grep "node-v[0-9]\{1,\}.[0-9]\{1,\}.[0-9]\{1,\}.tar.gz" $nodedir/SHASUMS.txt.asc | cut -d' ' -f1)
-currentsha=$(sha1sum $nodedir/node-latest.tar.gz | cut -d' ' -f1)
+publishedsha=$(grep "node-v[0-9]\{1,\}.[0-9]\{1,\}.[0-9]\{1,\}.tar.gz" $nodedir/SHASUMS256.txt.asc | cut -d' ' -f1)
+currentsha=$(sha256sum $nodedir/node-latest.tar.gz | cut -d' ' -f1)
 
-# If they don't match, download the source again
+# If they don't match, download the binary again
 #TODO this should be reconciled with the previous file check
 #TODO verify this is the right place for the uninstall
 # so that there is only one possible download
 if [ "$currentsha" != "$publishedsha" ];
 then
+    printf "Hashes did not match, downloading source again"
     rm -f $nodedir/node-latest.tar.gz
-    curl -o $nodedir/node-latest.tar.gz http://nodejs.org/dist/node-latest.tar.gz
+    curl -o $nodedir/node-latest.tar.gz http://nodejs.org/dist/latest/$nodebinary
+    printf "\n"
 
     # If node is already installed, remove it
     dpkg-query --status node 1>/dev/null
@@ -152,49 +165,30 @@ fi
 echo "Current location: "$(pwd)
 
 # Untar
+printf "Extracting node binary"
 tar xzf $nodedir/node-latest.tar.gz
+printf "\n"
 
-# Get the verison from the directory name
-# Remove the "v" so it doesn't mess up packaging later
+# Remove conflicting nodejs-legacy
+printf "Removing nodejs-legacy and older nodered"
+sudo apt-get -y --purge remove nodejs-legacy
+printf "\n"
+
+# Install current version of nodejs
+printf "Installing current version of nodejs"
 cd $nodedir/node-v*
-dirname=$(pwd | rev | cut -d'/' -f1 | rev)
-cleansedversion=$(echo $dirname | cut -d'-' -f2 | sed -r 's/^[v]?(.*)/\1/g')
+sudo dpkg --install node_*.deb
+printf "\n"
 
-# Check if we're already installed
-dpkg-query --status node 1>/dev/null
-result=$?
+# Replace node-red
+printf "Replacing node-red\n"
+sudo npm install -g node-red
+printf "\n"
 
-if [ "$result" -eq 0 ];
-then
-    echo "Node version already installed"
-    echo "Complete"
-    exit 0
-fi
+# Remove temporary directory
+printf "Cleaning up..."
+cd /tmp
+sudo rm -rf $nodedir
+printf "\n"
 
-# Run configure script
-printf "\nConfiguring Node installation..."
-sudo ./configure 1>/dev/null
-
-# Compile
-printf "\nRunning checkinstall on Node installation (this will take awhile)...\n"
-sudo checkinstall -d 0 --default --pkgversion="$cleansedversion" 1>/dev/null 2>&1
-result=$?
-
-if [ "$result" -ne 0 ];
-then
-    echo "Node install failed during checkinstall. Exiting."
-    exit 1
-fi
-
-# Package for Debian and install
-printf "\nPackaging Node installation..."
-sudo dpkg --install node_*
-result=$?
-
-if [ "$result" -ne 0 ];
-then
-    echo "Node install failed during package installation. Exiting."
-    exit 1
-fi
-
-printf "\nComplete\n"
+printf "\nDependency installation complete\n"
