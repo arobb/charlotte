@@ -2,13 +2,11 @@
 # Script to install InfluxDB (after dependencies have been satisfied)
 
 # Version to install
-version="0.9.2.1"
-goversion="1.4"
+version="0.10.3"
+goversion="1.4.3"
 
 # Install InfluxDB
 echo "Installing InfluxDB"
-sudo npm install grunt --save-dev
-sudo npm install -g grunt-cli --save-dev
 
 # Use go1.4
 source ~/.gvm/scripts/gvm
@@ -18,15 +16,15 @@ gvm use "go$goversion"
 echo "Current GOPATH: $GOPATH"
 
 # GVM has changed up where GOPATH is, so need to use it
-mkdir -p $GOPATH/src/github.com/influxdb
-cd $GOPATH/src/github.com/influxdb
+mkdir -p $GOPATH/src/github.com/influxdata
+cd $GOPATH/src/github.com/influxdata
 
 # Download the source
-git clone https://github.com/influxdb/influxdb.git
-cd $GOPATH/src/github.com/influxdb/influxdb
+git clone https://github.com/influxdata/influxdb.git
+cd $GOPATH/src/github.com/influxdata/influxdb
 
 # Dependencies
-cd $GOPATH/src/github.com/influxdb
+cd $GOPATH/src/github.com/influxdata
 go get -u -f -t ./...
 
 # Build
@@ -40,24 +38,32 @@ go install ./...
 #  but in order to build you have to provide a tag name that doesn't yet
 #  exist. (Hints provided from http://www.genericmaker.com/2015/
 #  04/updating-influxdb-grafana-raspberry-pi.html
-cd $GOPATH/src/github.com/influxdb/influxdb
+cd $GOPATH/src/github.com/influxdata/influxdb
 
 # Remove packages if they already exist
 if [ -f influxdb_*.deb ];
 then
-    rm influxdb_*.deb
-    rm influxdb_*.tar.gz
-    rm influxdb-*.rpm
+    rm build/influxdb_*.deb
+    rm build/influxdb_*.tar.gz
+    rm build/influxdb-*.rpm
 fi
 
-git checkout tags/v"$version"
-NIGHTLY_BUILD="v$version" ./package.sh "$version"
-# Intentionally ignore errors here, we expect one regarding an S3 key
+# Build packages
+# https://github.com/influxdata/influxdb/issues/5560#issuecomment-195087211
+echo "Building and packaging InfluxDB..."
+./build.py --package --version="$version" --arch=armhf
+result=$?
+
+if [ "$result" -ne "0" ];
+then
+  echo "Build or packaging failed, exiting installer."
+  exit $result
+fi
 
 
 # Install the packaged version
 printf "\nInstalling InfluxDB...\n"
-sudo dpkg --install influxdb_*.deb
+sudo dpkg --install "build/influxdb_$version"*.deb
 result=$?
 
 if [ "$result" -ne 0 ];
