@@ -11,7 +11,8 @@ For those who care about such things, I want to call out that the following pack
 - snmp
 - ruby
 - go
-- node.js
+
+FOR NODE OR NODE-RED USERS: The dependency installation script will install the newest version of node.js (directly from nodejs.org) which can also cause the reinstallation of node-red.
 
 # Basics #
 ## Hardware ##
@@ -19,15 +20,15 @@ For those who care about such things, I want to call out that the following pack
 	Adafruit PiTFT 3.5" Resistive Touch Display HAT
 
 ## Operating System ##
-	Raspbian (as of 10 Aug 2015)
+	Raspbian (as of 2 Feb 2016)
 
 ## Influx DB ##
-	Version 0.9.2.1
+	Version 0.10.3
 	UI http://*:8083
 	REST API http://*:8086
 
 ## Grafana ##
-	Version 2.1.3
+	Version 2.6.0
 	UI http://*:3000
 
 ## Running things ##
