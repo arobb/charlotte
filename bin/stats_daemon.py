@@ -9,10 +9,11 @@ from daemon import Daemon
 class StatsDaemon(Daemon):
     def run(self):
         dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-        
+
         throughput_statsfile = "./" + dir + "/put_local_net_ext_traffic.sh"
-        latency_statsfile = dir + "/put_local_net_latency.sh"
-        
+        latency_statsfile = dir + "/put_standard_latency_measurements.sh"
+        local_latency_statsfile = dir + "/put_local_net_latency.sh"
+
         while True:
             try:
                 throughput_output = subprocess.check_output([throughput_statsfile, "-i", "wan1", "-m", "B4 75 0E 06 DB 76", "-p", "comcast"])
@@ -30,12 +31,21 @@ class StatsDaemon(Daemon):
             except:
                 # Well something went wrong...
                 pass
-            
-            
+
+
             try:
-                latency_output = subprocess.check_output([latency_statsfile, "eth0"])
+                latency_output = subprocess.check_output([latency_statsfile])
                 #print latency_output
-                
+
+            except:
+                # Well something went wrong...
+                pass
+
+
+            try:
+                local_latency_output = subprocess.check_output([local_latency_statsfile, "eth0"])
+                #print local_latency_output
+
             except:
                 # Well something went wrong...
                 pass
@@ -45,13 +55,13 @@ class StatsDaemon(Daemon):
             time.sleep(12)
 
 if __name__ == "__main__":
-    
+
     # We sorta need sudo for
     """
     if os.geteuid() != 0:
         exit("You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'. Exiting.")
     """
-    
+
     daemon = StatsDaemon('/tmp/statsdaemon.pid', stdin='/dev/null', stdout='/dev/stdout', stderr='/dev/stderr')
 
     if len(sys.argv) == 2:

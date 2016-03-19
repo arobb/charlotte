@@ -35,7 +35,7 @@ while getopts "hi:m:p:" opt; do
             exit 0
             ;;
         :)
-            echo "'$OPTARG' requires a string argument" 
+            echo "'$OPTARG' requires a string argument"
     esac
 done
 
@@ -78,12 +78,12 @@ case $unamestr in
 
     Linux)
         platform='linux'
-        myip=$(ip -4 addr show | grep 'inet ' | sed -e 's/^[ \t]*//' | cut -d' ' -f2 | cut -d'/' -f1)
+        myip=$(ip -4 addr show | grep 'inet ' | grep -v 127.0.0.1 | sed -e 's/^[ \t]*//' | cut -d' ' -f2 | cut -d'/' -f1)
         ;;
 
     *)
         platform='linux'
-        myip=$(ip -4 addr show | grep 'inet ' | sed -e 's/^[ \t]*//' | cut -d' ' -f2 | cut -d'/' -f1)
+        myip=$(ip -4 addr show | grep 'inet ' | grep -v 127.0.0.1 | sed -e 's/^[ \t]*//' | cut -d' ' -f2 | cut -d'/' -f1)
         ;;
 esac
 
@@ -134,8 +134,13 @@ do
     esac
 done
 
+submission="$influxtable,router=$router,if=$interface,provider=$provider state=$state""i"",received_in_bytes=$received""i"",sent_in_bytes=$sent""i"" $epoch"000000000
+
+echo $submission
+
 # Submit
-run="curl --silent --show-error -i -XPOST \"http://$influxhostport/write?db=$influxdatabase&precision=s\" --data-binary \"$influxtable,router=$router,if=$interface,provider=$provider state=$state,received_in_bytes=$received,sent_in_bytes=$sent $epoch\""
+#run="curl --silent --show-error -i -XPOST \"http://$influxhostport/write?db=$influxdatabase&precision=s\" --data-binary \"$influxtable,router=$router,if=$interface,provider=$provider state=$state,received_in_bytes=$received,sent_in_bytes=$sent $epoch\""
+run="influx -database \"$influxdatabase\" -execute \"INSERT $submission\""
 
 echo "$run"
 bash -c $run

@@ -23,12 +23,12 @@ case $unamestr in
 
     Linux)
         platform='linux'
-        myip=$(ip -4 addr show $1 | grep 'inet ' | sed -e 's/^[ \t]*//' | cut -d' ' -f2 | cut -d'/' -f1)
+        myip=$(ip -4 addr show $1 | grep 'inet ' | grep -v 127.0.0.1 | sed -e 's/^[ \t]*//' | cut -d' ' -f2 | cut -d'/' -f1)
         ;;
 
     *)
         platform='linux'
-        myip=$(ip -4 addr show $1 | grep 'inet ' | sed -e 's/^[ \t]*//' | cut -d' ' -f2 | cut -d'/' -f1)
+        myip=$(ip -4 addr show $1 | grep 'inet ' | grep -v 127.0.0.1 | sed -e 's/^[ \t]*//' | cut -d' ' -f2 | cut -d'/' -f1)
         ;;
 esac
 
@@ -54,13 +54,14 @@ do
     addr=$(echo "$pair" | cut -f1)
     latency=$(echo "$pair" | cut -f2)
 
-    host="$influxtable,source_ip=$myip,target_ip=$addr value=$latency $epoch"
+    host="INSERT $influxtable,source_ip=$myip,target_ip=$addr value=$latency""i"" $epoch"000000000
 
     submission=$(echo -e "$host\n$submission")
 done
 
 # Submit
-run="curl --silent --show-error -i -XPOST \"http://$influxhostport/write?db=$influxdatabase&precision=s\" --data-binary \"$submission\""
+#run="curl --silent --show-error -i -XPOST \"http://$influxhostport/write?db=$influxdatabase&precision=s\" --data-binary \"$submission\""
+run="influx -database \"$influxdatabase\" -execute \"$submission\""
 
 echo "$run"
 bash -c $run
