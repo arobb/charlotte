@@ -5,6 +5,8 @@ These steps guide the installation of the InfluxDB time-series datastore, Grafan
 
 The metrics collected include external traffic flow from the gateway using SNMP. While most of the metrics are auto-discovering, you'll need to change the MAC address of the external interface in bin/stats_daemon.py. For the collection to work, your router also must support SNMP, and must have it enabled. (It also needs to publish the same information the get_local_net_ext_traffic.sh script expects at the same SNMP OIDs.)
 
+Additional latency measurements can be included easily by adding a name and IP to the list at the beginning of put_standard_latency_measurements.sh. The names become additional measurements in the "network" Influx database.
+
 For those who care about such things, I want to call out that the following packages are installed during this process. See install/install_dependencies.sh for a full list:
 - Bonjour (mdns, though this is installed by default)
 - arp-scan
