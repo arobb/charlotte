@@ -12,11 +12,17 @@ class StatsDaemon(Daemon):
 
         throughput_statsfile = "./" + dir + "/put_local_net_ext_traffic.sh"
         latency_statsfile = dir + "/put_standard_latency_measurements.sh"
-        local_latency_statsfile = dir + "/put_local_net_latency.sh"
 
-        # Run when <current timestamp> is 15+ seconds later than <last saved timestamp>
-        timestamp = int(time.time()) + 16  # Initialize so it runs on the first round
-        while int(time.time()) > timestamp + 15:
+        # Run when <current timestamp> is <delay>+ seconds later than <last saved timestamp>
+        delay = 10
+        timestamp = int(time.time()) + delay  # Initialize so it runs on the first round
+        while True:
+
+            # If the current time is within <delay> seconds of the previous run,
+            #   then sleep a second and skip to the next cycle
+            if int(time.time()) < timestamp + delay:
+                time.sleep(1)
+                continue
 
             # Reset the timestamp to current
             timestamp = int(time.time())
@@ -41,14 +47,6 @@ class StatsDaemon(Daemon):
             try:
                 latency_output = subprocess.check_output([latency_statsfile])
                 #print latency_output
-            except:
-                # Well something went wrong...
-                pass
-
-            # Check latency to all hosts visible on the local network
-            try:
-                local_latency_output = subprocess.check_output([local_latency_statsfile, "eth0"])
-                #print local_latency_output
             except:
                 # Well something went wrong...
                 pass
