@@ -14,45 +14,45 @@ class StatsDaemon(Daemon):
         latency_statsfile = dir + "/put_standard_latency_measurements.sh"
         local_latency_statsfile = dir + "/put_local_net_latency.sh"
 
-        while True:
+        # Run when <current timestamp> is 15+ seconds later than <last saved timestamp>
+        timestamp = int(time.time()) + 16  # Initialize so it runs on the first round
+        while int(time.time()) > timestamp + 15:
+
+            # Reset the timestamp to current
+            timestamp = int(time.time())
+
+            # Pull bandwidth stats for Comcast
             try:
                 throughput_output = subprocess.check_output([throughput_statsfile, "-i", "wan1", "-m", "B4 75 0E 06 DB 76", "-p", "comcast"])
                 #print throughput_output
-
             except:
                 # Well something went wrong...
                 pass
 
-
+            # Pull bandwidth stats for AT&T
             try:
                 throughput_output = subprocess.check_output([throughput_statsfile, "-i", "wan2", "-m", "B4 75 0E 06 DB 77", "-p", "att"])
                 #print throughput_output
-
             except:
                 # Well something went wrong...
                 pass
 
-
+            # Check latency between the Pi and meaningful destinations
             try:
                 latency_output = subprocess.check_output([latency_statsfile])
                 #print latency_output
-
             except:
                 # Well something went wrong...
                 pass
 
-
+            # Check latency to all hosts visible on the local network
             try:
                 local_latency_output = subprocess.check_output([local_latency_statsfile, "eth0"])
                 #print local_latency_output
-
             except:
                 # Well something went wrong...
                 pass
 
-            # Wait a few seconds to run again
-            # There are better ways to do this to get ~15 second intervals
-            time.sleep(12)
 
 if __name__ == "__main__":
 
