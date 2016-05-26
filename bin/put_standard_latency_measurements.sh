@@ -9,7 +9,7 @@ declare -A measurements
 measurements[att_bridge_latency]="192.168.1.254"
 measurements[att_gateway_latency]="162.238.124.1"
 measurements[comcast_bridge_latency]="192.168.100.1"
-measurements[comcast_gateway_latency]="73.170.208.1"
+measurements[comcast_gateway_latency]="24.5.80.1"
 measurements[google_dns_latency]="8.8.8.8"
 
 
