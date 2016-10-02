@@ -8,3 +8,11 @@ echo ""
 # Apply reasonable (2 month) retention period
 curl -G 'http://localhost:8086/query' --data-urlencode "q=CREATE RETENTION POLICY twomonths ON network DURATION 60d REPLICATION 1 DEFAULT"
 echo ""
+
+# Create default db for stats
+curl -G 'http://localhost:8086/query' --data-urlencode "q=CREATE DATABASE temperature"
+echo ""
+
+# Apply reasonable (2 month) retention period
+curl -G 'http://localhost:8086/query' --data-urlencode "q=CREATE RETENTION POLICY twomonths ON temperature DURATION 60d REPLICATION 1 DEFAULT"
+echo ""
