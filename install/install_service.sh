@@ -22,7 +22,12 @@ FILEPATH="../etc/$SERVICE"
 
 # Configure file path if it doesn't already exist
 mkdir -p "$FILEPATH"
-chown $REALUSER:$REALUSER "$FILEPATH"
+chown -R $REALUSER:$REALUSER "$FILEPATH"
+if [ "$?" -ne "0" ];
+then
+  echo 1>&2 "Unable to set permission on service file path: '$FILEPATH'"
+  exit 1
+fi
 
 
 # Generate the service file
@@ -40,13 +45,29 @@ RemainAfterExit=yes
 WantedBy=multi-user.target
 EOF
 
+if [ "$?" -ne "0" ];
+then
+  echo 1>&2 "Failed to create service script: '$FILEPATH/$FILENAME'"
+  exit 1
+fi
+
 
 # Set ownership
 chown $REALUSER:$REALUSER "$FILEPATH/$FILENAME"
+if [ "$?" -ne "0" ];
+then
+  echo 1>&2 "Unable to set permission on service file: '$FILEPATH/$FILENAME'"
+  exit 1
+fi
 
 
 # Link
 ln -s "$FILEPATH/$FILENAME" "/etc/systemd/system/$FILENAME"
+if [ "$?" -ne "0" ];
+then
+  echo 1>&2 "Failed to create symlink for service file in: '/etc/systemd/system/$FILENAME'"
+  exit 1
+fi
 
 
 # Enable the service
