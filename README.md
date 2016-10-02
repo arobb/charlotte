@@ -177,7 +177,7 @@ Stats are collected thusly:
 **Measurements**
 - bramble00 (hard coded in bin/put_temperature.sh)
   - field: host
-	- field: unit (hard coded to 'f' in bin/put_temperature.sh)
+  - field: unit (hard coded to 'f' in bin/put_temperature.sh)
 
 There are three stand-alone daemons that poll independently. bin/stats_daemon.py performs most network collection, excluding the local network "all-ping" which is done in bin/stats_daemon_local_net_latency.py, and temperature readings which are recorded from localhost via bin/temp_daemon.py.
 
