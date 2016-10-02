@@ -172,7 +172,8 @@ Stats are collected thusly:
   - field: source_ip (Raspberry Pi's IP address)
   - field: target_ip
   - tag: value (ping time in whole milliseconds)
-**Database**: temperature
+
+**Database**: temperature  
 **Measurements**
 - bramble00 (hard coded in bin/put_temperature.sh)
   - field: host
