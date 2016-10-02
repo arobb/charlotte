@@ -172,14 +172,15 @@ Stats are collected thusly:
   - field: source_ip (Raspberry Pi's IP address)
   - field: target_ip
   - tag: value (ping time in whole milliseconds)
-**Database**: temperature
+
+**Database**: temperature  
 **Measurements**
 - bramble00 (hard coded in bin/put_temperature.sh)
   - field: host
-	- field: unit (hard coded to 'f' in bin/put_temperature.sh)
+  - field: unit (hard coded to 'f' in bin/put_temperature.sh)
 
 There are three stand-alone daemons that poll independently. bin/stats_daemon.py performs most network collection, excluding the local network "all-ping" which is done in bin/stats_daemon_local_net_latency.py, and temperature readings which are recorded from localhost via bin/temp_daemon.py.
 
-**Dashboard**
+**Dashboard**  
 Open a browser to Grafana. You'll need to configure your InfluxDB as a data source and build a dashboard. (I haven't automated that part yet.)  
 http://raspberrypi.local:3000
