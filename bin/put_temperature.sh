@@ -50,4 +50,4 @@ submission="$influxtable,host=$h,unit=f value=$temp $epoch"
 run="curl --silent --show-error -H \"Content-Type: text/plain\" -i -XPOST \"http://$influxhostport/write?db=$influxdatabase&precision=s\" --data-binary \"$submission\""
 
 echo "$run"
-bash -c $run
+bash -c "$run"
