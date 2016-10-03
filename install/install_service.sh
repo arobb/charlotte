@@ -91,7 +91,7 @@ fi
 
 
 # Enable the service
-echo -n "Enable the new service... "
+echo "Enable the new service... "
 systemctl daemon-reload
 systemctl enable charlotte.service
 if [ "$?" -ne "0" ];
