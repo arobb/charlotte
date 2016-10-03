@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 # Generate and install the SystemD service
+#
+# Remove service with:
+# systemctl disable charlotte.service
+# rm /lib/systemd/system/charlotte.service
 
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
@@ -82,24 +86,6 @@ then
   exit 1
 else
   echo "Done"
-fi
-
-echo -n "Symlink service script... "
-if [ ! -f "/etc/systemd/system/$FILENAME" ];
-then
-
-  ln -s "/lib/systemd/system/$FILENAME" "/etc/systemd/system/$FILENAME"
-  if [ "$?" -ne "0" ];
-  then
-    echo ""
-    echo 1>&2 "Failed to create symlink for service file in: '/etc/systemd/system/$FILENAME'"
-    exit 1
-  else
-    echo "Done"
-  fi
-
-else
-  echo "Exists"
 fi
 
 
