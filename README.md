@@ -148,8 +148,8 @@ Install the service that automatically starts the reporting daemon(s)
 
 NOTE: Use the `install/install_service.sh` script to enable the two network and one temperature reporting daemons. Use `install/install_service_temperature.sh` to install _just_ the temperature daemon.
 
-Estimated duration: 5 seconds
-Run:
+Estimated duration: 5 seconds  
+Run:  
 ```
 sudo ./install/install_service.sh
 ```
