@@ -74,11 +74,21 @@ fi
 
 
 # Link
+echo -n "Copy service script... "
+cp '$FILEPATH/$FILENAME' /lib/systemd/system/
+if [ "$?" -ne "0" ];
+then
+  echo 1>&2 "Failed to copy file"
+  exit 1
+else
+  echo "Done"
+fi
+
 echo -n "Symlink service script... "
 if [ ! -f "/etc/systemd/system/$FILENAME" ];
 then
 
-  ln -s "$FILEPATH/$FILENAME" "/etc/systemd/system/$FILENAME"
+  ln -s "/lib/systemd/system/$FILENAME" "/etc/systemd/system/$FILENAME"
   if [ "$?" -ne "0" ];
   then
     echo ""
@@ -95,6 +105,7 @@ fi
 
 # Enable the service
 echo -n "Enable the new service... "
+systemctl daemon-reload
 systemctl enable charlotte.service
 if [ "$?" -ne "0" ];
 then
