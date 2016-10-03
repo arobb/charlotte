@@ -1,7 +1,7 @@
 # Charlotte #
 ## Home network monitoring on Raspberry Pi ##
 
-These steps guide the installation of the InfluxDB time-series datastore, Grafana web UI, a slew of dependencies, and make available a small Python daemon that can poll the local network for information. These were built on a VM running Debian, and installed on a Pi 2. The 'estimated durations' below are approximately what I experienced when I ran these on a Pi 2; run times on the development VM (on a MacBook Pro host) were significantly faster.
+These steps guide the installation of the InfluxDB time-series datastore, Grafana web UI, a slew of dependencies, and make available a small Python daemon that can poll the local network for information, as well as the internal thermal sensor built into the Raspberry Pi SoC. These were built on a VM running Debian, and installed on a Pi 2. The 'estimated durations' below are approximately what I experienced when I ran these on a Pi 2; run times on the development VM (on a MacBook Pro host) were significantly faster.
 
 The metrics collected include external traffic flow from the gateway using SNMP. While most of the metrics are auto-discovering, you'll need to change the MAC address of the external interface in bin/stats_daemon.py. For the collection to work, your router also must support SNMP, and must have it enabled. (It also needs to publish the same information the get_local_net_ext_traffic.sh script expects at the same SNMP OIDs.)
 
@@ -34,7 +34,7 @@ FOR NODE OR NODE-RED USERS: The dependency installation script will install the 
 	UI http://*:3000
 
 ## Running things ##
-The stats collection daemon can be started with:
+The stats collection daemon can be managed manually with the following, if you do not install the service:
 ```
 $PWD/bin/stats_daemon.py start
 ```
@@ -44,7 +44,7 @@ and stopped with:
 $PWD/bin/stats_daemon.py stop
 ```
 
-The other services should be started automatically by the installers, and are configured to start at boot. For a reason that now escapes me, using '.' rather than $PWD does *not* work to start the daemon scripts. (They'll appear to start, but won't function.)
+For a reason that now escapes me, using '.' rather than $PWD does *not* work to start the daemon scripts. (They'll appear to start, but won't function.)
 
 
 ## Extras ##
@@ -143,14 +143,16 @@ Run:
 ```
 
 
-## DONE! ##
-You should be ready to go. Start the stats collection daemon: (From the project root)
-```
-$PWD/bin/stats_daemon.py start
-```
+## Reporting service ##
+Install the service that automatically starts the reporting daemon(s)
 
-**PLEASE NOTE**  
-The daemon is not yet configured to start on boot, so you'll need to re-run this command whenever you restart the Pi! (One extremely dirty option would be to run the command with cron, piping output to /dev/null; the daemon uses a PID file to maintain a single instance, so this should not create multiple instances, however you will lose any error messages that would otherwise be written to the terminal.)
+NOTE: Use the `install/install_service.sh` script to enable the two network and one temperature reporting daemons. Use `install/install_service_temperature.sh` to install _just_ the temperature daemon.
+
+Estimated duration: 5 seconds
+Run:
+```
+sudo ./install/install_service.sh
+```
 
 
 **User Impersonation /dev/stdout error**  

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Generate and install the SystemD service
-# Installs service to control all three daemons
+# Installs JUST the temoerature daemon
 #
 # Remove service with:
 # systemctl disable charlotte.service
@@ -55,13 +55,13 @@ fi
 echo -n "Creating service file '$FILEPATH/$FILENAME'... "
 cat << EOF > "$FILEPATH/$FILENAME"
 [Unit]
-Description=Manage Charlotte reporting daemon
+Description=Manage Charlotte temperature reporting daemon
 
 [Service]
 User=pi
 Type=oneshot
-ExecStart=/usr/bin/env bash -c 'cd $DIR/..; \$PWD/bin/service-all.sh start'
-ExecStop=/usr/bin/env bash -c 'cd $DIR/..; \$PWD/bin/service-all.sh stop'
+ExecStart=/usr/bin/env bash -c 'cd $DIR/..; \$PWD/bin/temp_daemon.py start'
+ExecStop=/usr/bin/env bash -c 'cd $DIR/..; \$PWD/bin/temp_daemon.py stop'
 RemainAfterExit=yes
 
 [Install]
