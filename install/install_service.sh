@@ -79,7 +79,7 @@ fi
 
 # Link
 echo -n "Copy service script... "
-cp '$FILEPATH/$FILENAME' /lib/systemd/system/
+cp "$FILEPATH/$FILENAME" /lib/systemd/system/
 if [ "$?" -ne "0" ];
 then
   echo 1>&2 "Failed to copy file"
