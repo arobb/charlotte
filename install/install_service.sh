@@ -45,6 +45,7 @@ cat << EOF > "$FILEPATH/$FILENAME"
 Description=Manage Charlotte reporting daemon
 
 [Service]
+User=pi
 Type=oneshot
 ExecStart=/usr/bin/env bash -c 'cd $DIR/..; \$PWD/bin/service-all.sh start'
 ExecStop=/usr/bin/env bash -c 'cd $DIR/..; \$PWD/bin/service-all.sh stop'
