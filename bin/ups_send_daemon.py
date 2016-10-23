@@ -10,11 +10,11 @@ class UpsSendDaemon(Daemon):
     def run(self):
         dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
-        send_command = "./" + dir + "/../multicast-comms/send.py"
+        send_command = dir + "/../multicast-comms/send.py"
 
         # Run when <current timestamp> is <delay>+ seconds later than <last saved timestamp>
         delay = 15
-        timestamp = int(time.time()) + delay  # Initialize so it runs on the first round
+        timestamp = int(time.time()) - delay  # Initialize so it runs on the first round
         while True:
 
             # If the current time is within <delay> seconds of the previous run,
