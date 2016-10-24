@@ -47,6 +47,20 @@ $PWD/bin/stats_daemon.py stop
 For a reason that now escapes me, using '.' rather than $PWD does *not* work to start the daemon scripts. (They'll appear to start, but won't function.)
 
 
+## APC, multicast scripts ##
+To pull in the sub project that includes services for broadcasting data over multicast, use the following commands to pull and keep the subproject up-to-date  
+
+First pull-down
+```
+git submodule update --init
+```
+
+Stay up to date
+```
+git submodule foreach git pull origin master
+```
+
+
 ## Extras ##
 I also installed Chromium following these directions: http://elinux.org/RPi_Chromium
 
@@ -146,7 +160,7 @@ Run:
 ## Reporting service ##
 Install the service that automatically starts the reporting daemon(s)
 
-NOTE: Use the `install/install_service.sh` script to enable the two network and one temperature reporting daemons. Use `install/install_service_temperature.sh` to install _just_ the temperature daemon.
+NOTE: Use the `install/install_service.sh` script to enable the two network and one temperature reporting daemons. Use `install/install_service_temperature.sh` to install _just_ the temperature daemon. Use `install/install_service_ups_send.sh` on all Pi's connected to APC UPS devices. Use `install/install_service_ups_receive.sh` only on the Pi that should record power metrics to the database.
 
 Estimated duration: 5 seconds  
 Run:  
@@ -181,7 +195,17 @@ Stats are collected thusly:
   - field: host
   - field: unit (hard coded to 'f' in bin/put_temperature.sh)
 
-There are three stand-alone daemons that poll independently. bin/stats_daemon.py performs most network collection, excluding the local network "all-ping" which is done in bin/stats_daemon_local_net_latency.py, and temperature readings which are recorded from localhost via bin/temp_daemon.py.
+**Database**: power
+**Measurements**
+- power_line_volts
+- power_load_pct
+- power_battery_volts
+- power_minutes_left
+- power_battery_charge_pct
+- power_seconds_on_battery
+- power_status
+
+There are five stand-alone daemons that poll independently. bin/stats_daemon.py performs most network collection, excluding the local network "all-ping" which is done in bin/stats_daemon_local_net_latency.py. Temperature readings are recorded from localhost via bin/temp_daemon.py. Power readings are read and broadcast by bin/ups_send_daemon.py, they are received and recorded to Influx via multicast-comms/receive-put-apc.py.
 
 **Dashboard**  
 Open a browser to Grafana. You'll need to configure your InfluxDB as a data source and build a dashboard. (I haven't automated that part yet.)  
