@@ -117,7 +117,7 @@ fi
 
 # Start the service
 echo -n "Start the service... "
-service charlotte start
+systemctl start charlotte-ups-send.service
 if [ "$?" -ne "0" ];
 then
   echo ""
