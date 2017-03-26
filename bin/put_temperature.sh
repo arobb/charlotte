@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-influxhostport="raspberrypi.local:8086"
+influxhostport="rpi-admin00.local:8086"
 influxdatabase="temperature"
 influxtable="bramble00"
 
