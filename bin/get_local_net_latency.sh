@@ -2,7 +2,7 @@
 
 if [ -z $1 ];
 then
-    echo "Please provide an interface name as the first and only parameter"
+    echo "Please provide an interface name (e.g. eth0) as the first and only parameter"
     exit 1
 fi
 
