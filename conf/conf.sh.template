@@ -1,0 +1,73 @@
+#
+# Shared configuration
+#
+
+# SNMP community string
+snmp_community="public"
+
+# Gateway info
+num_interfaces=2 # How many interfaces are we monitoring
+
+gateway_external_iface_provider_0="" # e.g. "comcast", no spaces
+gateway_external_iface_label_0="wan1" # no spaces
+gateway_external_iface_mac_0=""
+
+gateway_external_iface_provider_1=""
+gateway_external_iface_label_1="wan2"
+gateway_external_iface_mac_1=""
+
+gateway_external_iface_provider_2=""
+gateway_external_iface_label_2="wan3"
+gateway_external_iface_mac_2=""
+
+gateway_external_iface_provider_3=""
+gateway_external_iface_label_3="wan4"
+gateway_external_iface_mac_3=""
+
+# Influx storage info
+influxhostport="localhost:8086"
+influxdatabase="network"
+influxtable="internet"
+influxtable_local_net_latency="local_latency"
+router_label="router00"
+
+
+#
+# Cleansing and exports
+#
+export snmp_community
+export num_interfaces
+
+export gateway_external_iface_provider_0
+export gateway_external_iface_label_0
+
+export gateway_external_iface_provider_1
+export gateway_external_iface_label_1
+
+export gateway_external_iface_provider_2
+export gateway_external_iface_label_2
+
+export gateway_external_iface_provider_3
+export gateway_external_iface_label_3
+
+export gateway_external_iface_mac_0=$(echo $gateway_external_iface_mac_0 | \
+  tr '[:lower:]' '[:upper:]' | \
+  tr ':' ' ')
+
+export gateway_external_iface_mac_1=$(echo $gateway_external_iface_mac_1 | \
+  tr '[:lower:]' '[:upper:]' | \
+  tr ':' ' ')
+
+export gateway_external_iface_mac_2=$(echo $gateway_external_iface_mac_2 | \
+  tr '[:lower:]' '[:upper:]' | \
+  tr ':' ' ')
+
+export gateway_external_iface_mac_3=$(echo $gateway_external_iface_mac_3 | \
+  tr '[:lower:]' '[:upper:]' | \
+  tr ':' ' ')
+
+export influxhostport
+export influxdatabase
+export influxtable
+export influxtable_local_net_latency
+export router_label
