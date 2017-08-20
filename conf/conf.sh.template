@@ -24,6 +24,15 @@ gateway_external_iface_provider_3=""
 gateway_external_iface_label_3="wan4"
 gateway_external_iface_mac_3=""
 
+# Latency measurements
+# Add as desired. Key is a measurement name, value is an IP address
+# Bridge is the address of the modem, if applicable to the connection
+# Gateway is the first router past the modem, e.g. the "default gateway" of the WAN connection
+declare -A measurements
+measurements[google_dns_latency]="8.8.8.8"
+measurements[${gateway_external_iface_provider_0}_bridge_latency]="192.168.100.1"
+measurements[${gateway_external_iface_provider_0}_gateway_latency]=""
+
 # Influx storage info
 influxhostport="localhost:8086"
 influxdatabase="network"
@@ -65,6 +74,8 @@ export gateway_external_iface_mac_2=$(echo $gateway_external_iface_mac_2 | \
 export gateway_external_iface_mac_3=$(echo $gateway_external_iface_mac_3 | \
   tr '[:lower:]' '[:upper:]' | \
   tr ':' ' ')
+
+export measurements
 
 export influxhostport
 export influxdatabase
