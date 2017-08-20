@@ -1,21 +1,11 @@
 #!/bin/bash
 
-influxhostport="localhost:8086"
-influxdatabase="network"
-#influxtable="google_dns_latency"
-#target="8.8.8.8"
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-declare -A measurements
-measurements[att_bridge_latency]="192.168.1.254"
-measurements[att_gateway_latency]="162.238.124.1"
-measurements[comcast_bridge_latency]="192.168.100.1"
-measurements[comcast_gateway_latency]="24.5.80.1"
-measurements[google_dns_latency]="8.8.8.8"
+# Import configuration
+. $DIR/../conf/conf.sh
 
-
-
-DIR=$(readlink -f $(dirname ${BASH_SOURCE[0]}))
-
+# Determine which platform we're on to properly obtain the local IP
 platform='unknown'
 unamestr=$(uname)
 

@@ -1,17 +1,14 @@
 #!/bin/bash
 
-influxhostport="localhost:8086"
-influxdatabase="network"
-influxtable="internet"
-router="router01"
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-DIR=$(readlink -f $(dirname ${BASH_SOURCE[0]}))
-
+# Import configuration
+. $DIR/../conf/conf.sh
 
 # Get arguments
 show_help()
 {
-    echo "Please provide three string arguments: 'i' the interface, 'm' the interface MAC address, and 'p' the provider."
+    echo "Please provide three string arguments: 'i' the interface label, 'm' the interface MAC address, and 'p' the provider label."
 }
 
 OPTIND=1 # Reset counter for getopts

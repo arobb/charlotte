@@ -1,16 +1,15 @@
 #!/bin/bash
 
-influxhostport="localhost:8086"
-influxdatabase="network"
-influxtable="local_latency"
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+# Import configuration
+. $DIR/../conf/conf.sh
 
 if [ -z $1 ];
 then
     echo "Please provide an interface name as the first and only parameter"
     exit 1
 fi
-
-DIR=$(readlink -f $(dirname ${BASH_SOURCE[0]}))
 
 platform='unknown'
 unamestr=$(uname)
@@ -54,7 +53,7 @@ do
     addr=$(echo "$pair" | cut -f1)
     latency=$(echo "$pair" | cut -f2)
 
-    host="INSERT $influxtable,source_ip=$myip,target_ip=$addr value=$latency""i"" $epoch"000000000
+    host="INSERT $influxtable_local_net_latency,source_ip=$myip,target_ip=$addr value=$latency""i"" $epoch"000000000
 
     submission=$(echo -e "$host\n$submission")
 done

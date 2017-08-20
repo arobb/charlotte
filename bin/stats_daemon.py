@@ -10,7 +10,8 @@ class StatsDaemon(Daemon):
     def run(self):
         dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
-        throughput_statsfile = "./" + dir + "/put_local_net_ext_traffic.sh"
+        config_file = dir + "/../conf/get_conf.sh"
+        throughput_statsfile = dir + "/put_local_net_ext_traffic.sh"
         latency_statsfile = dir + "/put_standard_latency_measurements.sh"
 
         # Run when <current timestamp> is <delay>+ seconds later than <last saved timestamp>
@@ -27,29 +28,46 @@ class StatsDaemon(Daemon):
             # Reset the timestamp to current
             timestamp = int(time.time())
 
-            # Pull bandwidth stats for Comcast
-            try:
-                throughput_output = subprocess.check_output([throughput_statsfile, "-i", "wan1", "-m", "B4 75 0E 07 5D E2", "-p", "comcast"])
-                #print throughput_output
-            except:
-                # Well something went wrong...
-                pass
+            # Get number of interfaces
+            num_interfaces = subprocess.check_output([config_file, "num_interfaces"]).strip()
+            num_interfaces = int(num_interfaces)
 
-            # Pull bandwidth stats for AT&T
-            try:
-                throughput_output = subprocess.check_output([throughput_statsfile, "-i", "wan2", "-m", "B4 75 0E 07 5D E3", "-p", "att"])
-                #print throughput_output
-            except:
-                # Well something went wrong...
-                pass
+            # Pull bandwidth stats
+            for i in range(0,num_interfaces):
+                try:
+                    provider = subprocess.check_output([config_file, "gateway_external_iface_provider_"+str(i)]).strip()
+                    label = subprocess.check_output([config_file, "gateway_external_iface_label_"+str(i)]).strip()
+                    mac = subprocess.check_output([config_file, "gateway_external_iface_mac_"+str(i)]).strip()
+                    throughput_output = subprocess.check_output([throughput_statsfile, "-i", label, "-m", mac, "-p", provider])
+                    #print throughput_output
+                except:
+                    # Well something went wrong...
+                    pass
 
-            # Check latency between the Pi and meaningful destinations
-            try:
-                latency_output = subprocess.check_output([latency_statsfile])
-                #print latency_output
-            except:
-                # Well something went wrong...
-                pass
+
+            # # Pull bandwidth stats for Comcast
+            # try:
+            #     throughput_output = subprocess.check_output([throughput_statsfile, "-i", "wan1", "-m", "B4 75 0E 07 5D E2", "-p", "comcast"])
+            #     #print throughput_output
+            # except:
+            #     # Well something went wrong...
+            #     pass
+            #
+            # # Pull bandwidth stats for AT&T
+            # try:
+            #     throughput_output = subprocess.check_output([throughput_statsfile, "-i", "wan2", "-m", "B4 75 0E 07 5D E3", "-p", "att"])
+            #     #print throughput_output
+            # except:
+            #     # Well something went wrong...
+            #     pass
+            #
+            # # Check latency between the Pi and meaningful destinations
+            # try:
+            #     latency_output = subprocess.check_output([latency_statsfile])
+            #     #print latency_output
+            # except:
+            #     # Well something went wrong...
+            #     pass
 
 
 if __name__ == "__main__":
