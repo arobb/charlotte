@@ -49,7 +49,7 @@ then
 fi
 
 # Get the numeric index for the interface specified by the given MAC address
-ifindex=$(echo "$ifrawoid" | grep "$mac" | rev | cut -d'.' -f1 | rev | cut -d' ' -f1)
+ifindex=$(echo "${ifrawoid[@]}" | grep "$mac" | rev | cut -d'.' -f1 | rev | cut -d' ' -f1)
 
 # Get the info. status/in/out
 # -O qv: show only value portion of key:value pair
