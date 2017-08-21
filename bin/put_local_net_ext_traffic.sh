@@ -131,7 +131,7 @@ do
     esac
 done
 
-submission="$influxtable,router=$router,if=$interface,provider=$provider state=$state""i"",received_in_bytes=$received""i"",sent_in_bytes=$sent""i"" $epoch"000000000
+submission="$influxtable,router=$router_label,if=$interface,provider=$provider state=$state""i"",received_in_bytes=$received""i"",sent_in_bytes=$sent""i"" $epoch"000000000
 
 echo $submission
 
