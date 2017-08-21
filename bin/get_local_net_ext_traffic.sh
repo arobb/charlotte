@@ -29,10 +29,8 @@ then
     exit 1
 fi
 
-# MAC of the gateway interface
-mac=$(echo $1 | \
-  tr '[:upper:]' '[:lower:]' | \
-  tr ' ' ':')
+# Pull the parameter into a named parameter
+mac="$1"
 
 # Get the local gateway
 gateway=$(netstat -rn | grep 'UG' | awk '{print $2}' | grep '^[0-9]\{1,3\}\.')
@@ -46,6 +44,25 @@ if [ "$result" -ne 0 ];
 then
     echo "$0 unable to get interface index. Router might not support SNMP"
     exit 1
+fi
+
+# Determine whether the values are Hex-Strings or just normal strings
+# hashexstring is "has hex string"
+hashexstring=$(echo "${ifrawoid[@]}" | grep "Hex-STRING" | wc -l | awk '{$1=$1;print}')
+
+# Configure the mac address to match
+# Hex-STRING: F0 9F C2 1E C5 CA
+#     STRING: f0:9f:c2:1e:c5:cb
+if [ "$hashexstring" -gt "0" ];
+then
+  mac=$(echo $mac | \
+    tr '[:lower:]' '[:upper:]' | \
+    tr ':' ' ')
+
+else
+  mac=$(echo $mac | \
+    tr '[:upper:]' '[:lower:]' | \
+    tr ' ' ':')
 fi
 
 # Get the numeric index for the interface specified by the given MAC address
