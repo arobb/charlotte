@@ -44,30 +44,13 @@ class StatsDaemon(Daemon):
                     # Well something went wrong...
                     pass
 
-
-            # # Pull bandwidth stats for Comcast
-            # try:
-            #     throughput_output = subprocess.check_output([throughput_statsfile, "-i", "wan1", "-m", "B4 75 0E 07 5D E2", "-p", "comcast"])
-            #     #print throughput_output
-            # except:
-            #     # Well something went wrong...
-            #     pass
-            #
-            # # Pull bandwidth stats for AT&T
-            # try:
-            #     throughput_output = subprocess.check_output([throughput_statsfile, "-i", "wan2", "-m", "B4 75 0E 07 5D E3", "-p", "att"])
-            #     #print throughput_output
-            # except:
-            #     # Well something went wrong...
-            #     pass
-            #
-            # # Check latency between the Pi and meaningful destinations
-            # try:
-            #     latency_output = subprocess.check_output([latency_statsfile])
-            #     #print latency_output
-            # except:
-            #     # Well something went wrong...
-            #     pass
+            # Check latency between the Pi and meaningful destinations
+            try:
+                latency_output = subprocess.check_output([latency_statsfile])
+                #print latency_output
+            except:
+                # Well something went wrong...
+                pass
 
 
 if __name__ == "__main__":
