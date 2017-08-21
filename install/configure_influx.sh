@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Script to configure a database for network stats after InfluxDB has been installed
 
 # Create default db for stats

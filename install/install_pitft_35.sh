@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Install PiTFT 3.5" screen and configure to allow X to boot
 # Still need to run raspi-config to configure boot option
 
@@ -25,4 +25,3 @@ curl -SLs https://apt.adafruit.com/add | sudo bash
 echo "Installing loader changes and Pi helper"
 sudo apt-get install raspberrypi-bootloader
 sudo apt-get install adafruit-pitft-helper
-

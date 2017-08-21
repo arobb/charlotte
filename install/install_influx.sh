@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Script to install InfluxDB (after dependencies have been satisfied)
 
 # Version to install

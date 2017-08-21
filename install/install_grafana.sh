@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Installs Grafana
 
 # Version to install
@@ -71,12 +71,12 @@ then
 --- 21,28 ----
         inlineText: true,
         skipPragmas: true,
-  
+
 +       waitSeconds: 0, // Raspberry Pi builds https://github.com/grafana/grafana/issues/2183#issuecomment-131439150
-+ 
++
         done: function (done, output) {
           var duplicates = require('rjs-build-analysis').duplicates(output);
-  
+
 EOF
 
 	# In case patching fails (likely because it already happened)

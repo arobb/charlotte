@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # Implements daemon class to poll network stats more frequently than cron
 # Daemon from http://www.jejik.com/articles/2007/02/a_simple_unix_linux_daemon_in_python/
 # Found via http://stackoverflow.com/questions/16420092/how-to-make-python-script-run-as-service

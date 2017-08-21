@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Install dependencies for InfluxDB and Grafana
 # Will ask for sudo password (via sudo)
 
