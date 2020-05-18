@@ -19,12 +19,12 @@ FILEPATH="$DIR/../etc/$SERVICE"
 
 
 # Make sure an existing charlotte.service is not installed
-if [ -f "/etc/systemd/system/multi-user.target.wants/$FILENAME" ];
-then
-  echo "Service already appears to be installed."
-  echo "Please remove existing service '$FILENAME' before installing this one."
-  exit 1
-fi
+# if [ -f "/etc/systemd/system/multi-user.target.wants/$FILENAME" ];
+# then
+#   echo "Service already appears to be installed."
+#   echo "Please remove existing service '$FILENAME' before installing this one."
+#   exit 1
+# fi
 
 
 # Make sure we are running as root
